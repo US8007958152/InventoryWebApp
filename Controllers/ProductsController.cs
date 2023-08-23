@@ -1,4 +1,5 @@
 ﻿using InventoryWebApp.BusinessLogicLayer;
+using InventoryWebApp.Common;
 using InventoryWebApp.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,6 +24,9 @@ namespace InventoryWebApp.Controllers
         [HttpGet]
         public IActionResult Add()
         {
+            var userProfile = SessionHelper.GetObjectFromJson<User>(HttpContext.Session, "UserProfile");
+            if(userProfile == null)
+                return RedirectToAction("GetProducts");
             return View();
         }
         [HttpPost]
@@ -46,6 +50,9 @@ namespace InventoryWebApp.Controllers
         [HttpGet]
         public IActionResult Update(int productId)
         {
+            var userProfile = SessionHelper.GetObjectFromJson<User>(HttpContext.Session, "UserProfile");
+            if (userProfile == null)
+                return RedirectToAction("GetProducts");
             Product product=_Product.GetProductById(productId);
             return View(product);
         }

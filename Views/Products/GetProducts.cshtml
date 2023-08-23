@@ -1,5 +1,6 @@
 ﻿@model IEnumerable<InventoryWebApp.Models.Product>
-
+@using InventoryWebApp.Common
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @{
     ViewData["Title"] = "GetProducts";
 }
@@ -7,7 +8,13 @@
 <h1>GetProducts</h1>
 
 <p>
-    <a asp-action="Add">Create New</a>
+    @{
+        var userProfile = SessionHelper.GetObjectFromJson<User>(HttpContextAccessor.HttpContext.Session, "UserProfile");
+    }
+    @if (userProfile!= null)
+    {
+        <a asp-action="Add">Create New</a>
+    }
 </p>
 <table class="table">
     <thead>
@@ -28,25 +35,31 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CostPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Qty)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SalesPrice)
-            </td>
-            <td>
-                <a asp-action="Update" asp-route-productId="@item.ProductNo">Edit</a> |
-                <a asp-action="Delete" asp-route-productId="@item.ProductNo">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CostPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Qty)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SalesPrice)
+                </td>
+                <td>
+                    @if (userProfile != null)
+                    {
+                        <a asp-action="Update" asp-route-productId="@item.ProductNo">Edit</a>
+                   
+                    <a asp-action = "Delete" asp-route-productId ="@item.ProductNo" > Delete </a>
+                    }
+
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using InventoryWebApp.Common
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -22,9 +24,15 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="GetProducts">All Products</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Add">Add Product</a>
-                        </li>
+                        @{
+                            var userProfile = SessionHelper.GetObjectFromJson<User>(HttpContextAccessor.HttpContext.Session, "UserProfile");
+                        }
+                        @if (userProfile != null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Add">Add Product</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
